@@ -22,7 +22,17 @@ void SQLManager::load_db(QString path)
         qDebug() << "Tables: " << tables;
         if(tables.length() > 1)
         {
-            // TODO: Choose a table
+            bool ok;
+            QString text = QInputDialog::getText((QWidget*)this->parent(), tr("Choose Table"),
+                                                 "Tables: " + tables.join(" "), QLineEdit::Normal,
+                                                 QDir::home().dirName(), &ok);
+            if (ok && !text.isEmpty() && tables.contains(text)){
+                table = text.trimmed();
+            } else {
+                qDebug() << text << ": No such table!";
+                QMessageBox::critical((QWidget*)this->parent(), "Incorrect table!", "No table \"" + text + "\" Exists");
+                return;
+            }
         } else {
             table = tables.at(0);
         }
@@ -32,7 +42,7 @@ void SQLManager::load_db(QString path)
         // Load data into a table model
         QSqlTableModel *model = new QSqlTableModel(this, db);
         model->setTable(table);
-        model->setEditStrategy(QSqlTableModel::OnFieldChange);
+        model->setEditStrategy(QSqlTableModel::OnFieldChange);  // Enable editing also
         model->select();
 
         // Adjust the model

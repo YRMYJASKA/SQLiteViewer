@@ -7,6 +7,7 @@
 #include <QtSql>
 #include <QMessageBox>
 #include <QSqlTableModel>
+#include <QInputDialog>
 
 class SQLManager : public QObject
 {
